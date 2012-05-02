@@ -64,8 +64,13 @@ void FoldingSetNodeID::AddPointer(const void *Ptr) {
   // depend on the host.  It doesn't matter however, because hashing on
   // pointer values in inherently unstable.  Nothing  should depend on the 
   // ordering of nodes in the folding set.
-  Bits.append(reinterpret_cast<unsigned *>(&Ptr),
-              reinterpret_cast<unsigned *>(&Ptr+1));
+  union {
+    const void **p;
+    unsigned *u;
+  };
+  p=&Ptr;
+  Bits.append(u,
+              u+1);
 }
 void FoldingSetNodeID::AddInteger(signed I) {
   Bits.push_back(I);
