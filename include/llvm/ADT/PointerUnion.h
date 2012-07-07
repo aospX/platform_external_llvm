@@ -54,9 +54,15 @@ namespace llvm {
     static inline void *getAsVoidPointer(void *P) { return P; }
     static inline void *getFromVoidPointer(void *P) { return P; }
     enum {
+#if (__GNUC__ == 4 && __GNUC_MINOR__ == 7)
       PT1BitsAv = (int)PointerLikeTypeTraits<PT1>::NumLowBitsAvailable,
       PT2BitsAv = (int)PointerLikeTypeTraits<PT2>::NumLowBitsAvailable,
       NumLowBitsAvailable = (int) (PT1BitsAv < PT2BitsAv ? PT1BitsAv : PT2BitsAv)
+#else
+      PT1BitsAv = PointerLikeTypeTraits<PT1>::NumLowBitsAvailable,
+      PT2BitsAv = PointerLikeTypeTraits<PT2>::NumLowBitsAvailable,
+      NumLowBitsAvailable = PT1BitsAv < PT2BitsAv ? PT1BitsAv : PT2BitsAv
+#endif
     };
   };
   
